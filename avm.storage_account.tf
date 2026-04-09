@@ -13,12 +13,6 @@ module "storage_account" {
     user_assigned_resource_ids = [module.user_assigned_managed_identity.resource_id]
   }
 
-  customer_managed_key = {
-    key_vault_resource_id  = module.key_vault.resource_id
-    key_name               = reverse(split("/", module.key_vault.keys_resource_ids["cmk_for_storage_account"].versionless_id))[0]
-    user_assigned_identity = { resource_id = module.user_assigned_managed_identity.resource_id }
-  }
-
   containers = {
     demo = {
       name                  = "demo"

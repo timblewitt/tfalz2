@@ -7,22 +7,8 @@ module "key_vault" {
   resource_group_name           = module.resource_group.name
   tenant_id                     = data.azurerm_client_config.current.tenant_id
   public_network_access_enabled = true
-
-  keys = {
-    cmk_for_storage_account = {
-      key_opts = [
-        "decrypt",
-        "encrypt",
-        "sign",
-        "unwrapKey",
-        "verify",
-        "wrapKey"
-      ]
-      key_type = "RSA"
-      name     = "cmk-for-storage-account"
-      key_size = 2048
-    }
-  }
+  purge_protection_enabled      = false
+  soft_delete_retention_days    = 7
 
   private_endpoints = {
     primary = {
@@ -37,10 +23,6 @@ module "key_vault" {
     deployment_user_secrets = {
       role_definition_id_or_name = "Key Vault Administrator"
       principal_id               = data.azurerm_client_config.current.object_id
-    }
-    customer_managed_key = {
-      role_definition_id_or_name = "Key Vault Crypto Service Encryption User"
-      principal_id               = module.user_assigned_managed_identity.principal_id
     }
   }
 
