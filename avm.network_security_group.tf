@@ -2,7 +2,7 @@ module "network_security_group" {
   source  = "Azure/avm-res-network-networksecuritygroup/azurerm"
   version = "0.5.0"
 
-  resource_group_name = module.resource_group.name
+  resource_group_name = module.rg_network.name
   name                = local.resource_names.network_security_group_name
   location            = var.location
 

@@ -5,7 +5,7 @@ module "storage_account" {
   account_replication_type          = "LRS"
   location                          = var.location
   name                              = local.resource_names.storage_account_name
-  resource_group_name               = module.resource_group.name
+  resource_group_name               = module.rg_monitor.name
   infrastructure_encryption_enabled = true
 
   managed_identities = {
@@ -23,7 +23,8 @@ module "storage_account" {
   private_endpoints = {
     primary = {
       private_dns_zone_resource_ids = [module.private_dns_zone_storage_account.resource_id]
-      subnet_resource_id            = module.virtual_network.subnets["private_endpoints"].resource_id
+      subnet_resource_id            = module.virtual_network.subnets["default"].resource_id
+//      subnet_resource_id            = module.virtual_network.subnets["private_endpoints"].resource_id
       subresource_name              = "blob"
       tags                          = var.tags
     }

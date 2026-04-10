@@ -16,15 +16,15 @@ variable "resource_name_location_short" {
   description = "The short name segment for the location"
   default     = ""
   validation {
-    condition     = length(var.resource_name_location_short) == 0 || can(regex("^[a-z]+$", var.resource_name_location_short))
-    error_message = "The short name segment for the location must only contain lowercase letters"
+    condition     = length(var.resource_name_location_short) == 0 || can(regex("^[A-Za-z]+$", var.resource_name_location_short))
+    error_message = "The short name segment for the location must only contain uppercase or lowercase letters"
   }
   validation {
     condition     = length(var.resource_name_location_short) <= 3
     error_message = "The short name segment for the location must be 3 characters or less"
   }
 }
-
+/*
 variable "resource_name_workload" {
   type        = string
   description = "The name segment for the workload"
@@ -38,7 +38,7 @@ variable "resource_name_workload" {
     error_message = "The name segment for the workload must be 4 characters or less"
   }
 }
-
+*/
 variable "resource_name_environment" {
   type        = string
   description = "The name segment for the environment"
@@ -65,23 +65,51 @@ variable "resource_name_sequence_start" {
 
 variable "resource_name_templates" {
   type        = map(string)
-  description = "A map of resource names to use"
+  description = "Enterprise naming templates"
+
   default = {
-    resource_group_name                 = "rg-$${workload}-$${environment}-$${location}-$${sequence}"
-    log_analytics_workspace_name        = "law-$${workload}-$${environment}-$${location}-$${sequence}"
-    virtual_network_name                = "vnet-$${workload}-$${environment}-$${location}-$${sequence}"
-    network_security_group_name         = "nsg-$${workload}-$${environment}-$${location}-$${sequence}"
-    nat_gateway_name                    = "nat-$${workload}-$${environment}-$${location}-$${sequence}"
-    nat_gateway_public_ip_name          = "pip-nat-$${workload}-$${environment}-$${location}-$${sequence}"
-    key_vault_name                      = "kv$${workload}$${environment}$${location_short}$${sequence}$${uniqueness}"
-    storage_account_name                = "sto$${workload}$${environment}$${location_short}$${sequence}$${uniqueness}"
-    user_assigned_managed_identity_name = "uami-$${workload}-$${environment}-$${location}-$${sequence}"
+    # Resource groups
+    resource_group_backup  = "RG-$${location_short}-$${sub_id}-Backup"
+    resource_group_monitor  = "RG-$${location_short}-$${sub_id}-Monitor"
+    resource_group_network  = "RG-$${location_short}-$${sub_id}-Networking"
+    resource_group_security = "RG-$${location_short}-$${sub_id}-Security"
+
+    # Resources
+    virtual_network_name         = "$${org_id}-$${location_short}-VNET-$${sub_id}"
+    network_security_group_name  = "$${org_id}-$${location_short}-NSG-$${sub_id}"
+    log_analytics_workspace_name = "$${org_id}-$${location_short}-LAW-$${sub_id}"
+    key_vault_name               = "$${org_id}-$${location_short}-KV-$${sub_id}"
+    storage_account_name         = "sto$${lower(org_id)}$${lower(location_short)}$${lower(sub_id)}$${uniqueness}"
+    user_assigned_managed_identity_name = "$${org_id}-$${location_short}-UAMI-$${sub_id}"
   }
 }
 
 variable "address_space" {
   type        = string
   description = "The address space that is used the virtual network"
+}
+
+variable "org_id" {
+  description = "Organisation identifier, e.g. ABC"
+  type        = string
+  default = "ABC"
+}
+
+variable "sub_id" {
+  description = "Subscription / Landing Zone identifier, e.g. LZ01"
+  type        = string
+  default = "LZ01"
+}
+/*
+variable "workload" {
+  description = "Workload name, e.g. Network"
+  type        = string
+}
+*/
+variable "location_short" {
+  description = "Azure region short code, e.g. UKS"
+  type        = string
+  default = "UKS"
 }
 
 variable "subnets" {

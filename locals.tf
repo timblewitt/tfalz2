@@ -1,10 +1,13 @@
 # Calculate resource names
 locals {
   name_replacements = {
-    workload       = var.resource_name_workload
+    org_id         = var.org_id
+    sub_id         = var.sub_id
+//    workload       = var.workload
     environment    = var.resource_name_environment
     location       = var.location
-    location_short = var.resource_name_location_short == "" ? module.regions.regions_by_name[var.location].geo_code : var.resource_name_location_short
+    location_short = upper(module.regions.regions_by_name[var.location].geo_code)
+//    location_short = var.resource_name_location_short == "" ? module.regions.regions_by_name[var.location].geo_code : var.resource_name_location_short
     uniqueness     = random_string.unique_name.id
     sequence       = format("%03d", var.resource_name_sequence_start)
   }
@@ -19,9 +22,6 @@ locals {
     address_prefixes = [module.ip_addresses.address_prefixes[key]]
     network_security_group = value.has_network_security_group ? {
       id = module.network_security_group.resource_id
-    } : null
-    nat_gateway = value.has_nat_gateway ? {
-      id = module.nat_gateway.resource_id
     } : null
     }
   }
