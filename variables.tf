@@ -1,3 +1,17 @@
+variable "org_id" {
+  description = "Organisation identifier for use in resource names, e.g. ABC"
+  type        = string
+  default     = "ABC"
+  validation {
+    condition     = can(regex("^[A-Za-z0-9]+$", var.org_id))
+    error_message = "The organisation identifier must only contain letters and numbers"
+  }
+  validation {
+    condition     = length(var.org_id) <= 4
+    error_message = "The organisation identifier must be 4 characters or less"
+  }
+}
+
 variable "location" {
   type        = string
   description = "The location/region where the resources will be created. Must be in the short form (e.g. 'uksouth')"
@@ -11,46 +25,38 @@ variable "location" {
   }
 }
 
-variable "resource_name_location_short" {
+variable "location_id" {
   type        = string
   description = "The short name segment for the location"
   default     = ""
   validation {
-    condition     = length(var.resource_name_location_short) == 0 || can(regex("^[A-Za-z]+$", var.resource_name_location_short))
-    error_message = "The short name segment for the location must only contain uppercase or lowercase letters"
+    condition     = length(var.location_id) == 0 || can(regex("^[A-Za-z]+$", var.location_id))
+    error_message = "The short name segment for the location must only contain letters"
   }
   validation {
-    condition     = length(var.resource_name_location_short) <= 3
+    condition     = length(var.location_id) <= 3
     error_message = "The short name segment for the location must be 3 characters or less"
   }
 }
-/*
-variable "resource_name_workload" {
+
+variable "environment_id" {
   type        = string
-  description = "The name segment for the workload"
-  default     = "demo"
-  validation {
-    condition     = can(regex("^[a-z0-9]+$", var.resource_name_workload))
-    error_message = "The name segment for the workload must only contain lowercase letters and numbers"
-  }
-  validation {
-    condition     = length(var.resource_name_workload) <= 4
-    error_message = "The name segment for the workload must be 4 characters or less"
-  }
-}
-*/
-variable "resource_name_environment" {
-  type        = string
-  description = "The name segment for the environment"
+  description = "The name segment for the environment e.g. dev, tst, qas, prd"
   default     = "dev"
   validation {
-    condition     = can(regex("^[a-z0-9]+$", var.resource_name_environment))
-    error_message = "The name segment for the environment must only contain lowercase letters and numbers"
+    condition     = can(regex("^[A-Za-z]+$", var.environment_id))
+    error_message = "The name segment for the environment must only contain letters"
   }
   validation {
-    condition     = length(var.resource_name_environment) <= 4
+    condition     = length(var.environment_id) <= 4
     error_message = "The name segment for the environment must be 4 characters or less"
   }
+}
+
+variable "sub_id" {
+  description = "Subscription / Landing Zone identifier, e.g. lz01 for use in resource names"
+  type        = string
+  default = "lz01"
 }
 
 variable "resource_name_sequence_start" {
@@ -69,42 +75,26 @@ variable "resource_name_templates" {
 
   default = {
     # Resource groups
-    resource_group_backup  = "RG-$${location_short}-$${sub_id}-Backup"
-    resource_group_monitor  = "RG-$${location_short}-$${sub_id}-Monitor"
-    resource_group_network  = "RG-$${location_short}-$${sub_id}-Networking"
-    resource_group_security = "RG-$${location_short}-$${sub_id}-Security"
+    resource_group_backup               = "RG-$${location_id}-$${sub_id}-Backup"
+    resource_group_monitor              = "RG-$${location_id}-$${sub_id}-Monitor"
+    resource_group_network              = "RG-$${location_id}-$${sub_id}-Networking"
+    resource_group_security             = "RG-$${location_id}-$${sub_id}-Security"
 
     # Resources
-    virtual_network_name         = "$${org_id}-$${location_short}-VNET-$${sub_id}"
-    network_security_group_name  = "$${org_id}-$${location_short}-NSG-$${sub_id}"
-    log_analytics_workspace_name = "$${org_id}-$${location_short}-LAW-$${sub_id}"
-    key_vault_name               = "$${org_id}-$${location_short}-KV-$${sub_id}"
-    storage_account_name         = "sto$${lower(org_id)}$${lower(location_short)}$${lower(sub_id)}$${uniqueness}"
-    user_assigned_managed_identity_name = "$${org_id}-$${location_short}-UAMI-$${sub_id}"
+    virtual_network_name                = "$${org_id}-$${location_id}-VNET-$${sub_id}"
+    network_security_group_name         = "$${org_id}-$${location_id}-NSG-$${sub_id}"
+    route_table_name                    = "$${org_id}-$${location_id}-RT-$${sub_id}"
+    log_analytics_workspace_name        = "$${org_id}-$${location_id}-LAW-$${sub_id}"
+    key_vault_name                      = "$${org_id}-$${location_id}-KV-$${sub_id}"
+    recovery_services_vault_name        = "$${org_id}-$${location_id}-RSV-$${sub_id}"
+    storage_account_name                = "sto$${lower(org_id)}$${lower(location_id)}$${lower(sub_id)}$${uniqueness}"
+    user_assigned_managed_identity_name = "$${org_id}-$${location_id}-UAMI-$${sub_id}"
   }
 }
 
 variable "address_space" {
   type        = string
-  description = "The address space that is used the virtual network"
-}
-
-variable "org_id" {
-  description = "Organisation identifier, e.g. ABC"
-  type        = string
-  default = "ABC"
-}
-
-variable "sub_id" {
-  description = "Subscription / Landing Zone identifier, e.g. LZ01"
-  type        = string
-  default = "LZ01"
-}
-
-variable "location_short" {
-  description = "Azure region short code, e.g. UKS"
-  type        = string
-  default = "UKS"
+  description = "The address space that is used for the virtual network"
 }
 
 variable "subnets" {
@@ -114,6 +104,15 @@ variable "subnets" {
     has_network_security_group = bool
   }))
   description = "The subnets"
+}
+
+variable "route_table_routes" {
+  description = "Routes to create in the route table"
+  type = map(object({
+    address_prefix         = string
+    next_hop_type          = string
+    next_hop_in_ip_address = optional(string)
+  }))
 }
 
 variable "tags" {

@@ -1,6 +1,6 @@
 module "storage_account" {
   source  = "Azure/avm-res-storage-storageaccount/azurerm"
-  version = "0.6.4"
+  version = "~> 0.6"
 
   account_replication_type          = "LRS"
   location                          = var.location
@@ -14,8 +14,8 @@ module "storage_account" {
   }
 
   containers = {
-    demo = {
-      name                  = "demo"
+    logs = {
+      name                  = "logs"
       container_access_type = "private"
     }
   }

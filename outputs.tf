@@ -13,6 +13,8 @@ output "resource_ids" {
     network_security_group         = module.network_security_group.resource_id
     key_vault                      = module.key_vault.resource_id
     storage_account                = module.storage_account.resource_id
+//    recovery_services_vault        = module.recovery_services_vault.resource_id
+    route_table                    = module.route_table.resource_id
     user_assigned_managed_identity = module.user_assigned_managed_identity.resource_id
   }
 }

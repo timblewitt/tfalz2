@@ -2,13 +2,12 @@
 locals {
   name_replacements = {
     org_id         = var.org_id
-    sub_id         = var.sub_id
-//    workload       = var.workload
-    environment    = var.resource_name_environment
     location       = var.location
-    location_short = var.resource_name_location_short == "" ? module.regions.regions_by_name[var.location].geo_code : var.resource_name_location_short
+    location_id    = var.location_id == "" ? module.regions.regions_by_name[var.location].geo_code : var.location_id
+    environment_id = var.environment_id
+    sub_id         = var.sub_id
     uniqueness     = random_string.unique_name.id
-    sequence       = format("%03d", var.resource_name_sequence_start)
+    sequence       = format("%02d", var.resource_name_sequence_start)
   }
 
   resource_names = { for key, value in var.resource_name_templates : key => templatestring(value, local.name_replacements) }
@@ -22,7 +21,10 @@ locals {
     network_security_group = value.has_network_security_group ? {
       id = module.network_security_group.resource_id
     } : null
-    }
+    route_table = key == "default" ? {
+      id = module.route_table.resource_id
+    } : null
+  }
   }
 }
 
