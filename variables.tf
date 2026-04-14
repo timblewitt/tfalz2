@@ -100,12 +100,7 @@ variable "sub_id" {
   type        = string
   default = "LZ01"
 }
-/*
-variable "workload" {
-  description = "Workload name, e.g. Network"
-  type        = string
-}
-*/
+
 variable "location_short" {
   description = "Azure region short code, e.g. UKS"
   type        = string

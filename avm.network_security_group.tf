@@ -9,11 +9,11 @@ module "network_security_group" {
   security_rules = {
     no_internet = {
       access                     = "Deny"
-      direction                  = "Outbound"
-      name                       = "block-internet-traffic"
-      priority                   = 100
+      direction                  = "Inbound"
+      name                       = "Deny-All-Inbound"
+      priority                   = 4096
       protocol                   = "*"
-      destination_address_prefix = "Internet"
+      destination_address_prefix = "*"
       destination_port_range     = "*"
       source_address_prefix      = "*"
       source_port_range          = "*"

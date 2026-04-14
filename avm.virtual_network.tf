@@ -1,6 +1,6 @@
 module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
-  version = "0.14.1"
+  version = "~> 0.14"
 
   parent_id           = module.rg_network.resource_id
   subnets             = local.subnets
