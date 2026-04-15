@@ -1,3 +1,4 @@
+/*
 module "user_assigned_managed_identity" {
   source  = "Azure/avm-res-managedidentity-userassignedidentity/azurerm"
   version = "0.3.4"
@@ -7,3 +8,4 @@ module "user_assigned_managed_identity" {
   resource_group_name = module.rg_security.name
   tags                = var.tags
 }
+*/

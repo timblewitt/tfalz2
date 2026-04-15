@@ -1,6 +1,6 @@
 module "route_table" {
   source  = "Azure/avm-res-network-routetable/azurerm"
-  version = "~> 0.3" # use latest available
+  version = "~> 0.3" 
 
   name       = "${local.resource_names.route_table_name}"
   location   = var.location

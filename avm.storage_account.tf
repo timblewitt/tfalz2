@@ -10,7 +10,7 @@ module "storage_account" {
 
   managed_identities = {
     system_assigned            = true
-    user_assigned_resource_ids = [module.user_assigned_managed_identity.resource_id]
+  //  user_assigned_resource_ids = [module.user_assigned_managed_identity.resource_id]
   }
 
   containers = {
