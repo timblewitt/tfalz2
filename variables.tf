@@ -1,3 +1,8 @@
+variable "subscription_id" {
+  description = "Azure subscription ID to deploy resources into"
+  type        = string
+}
+
 variable "org_id" {
   description = "Organisation identifier for use in resource names, e.g. ABC"
   type        = string
@@ -53,7 +58,7 @@ variable "environment_id" {
   }
 }
 
-variable "sub_id" {
+variable "lz_id" {
   description = "Subscription / Landing Zone identifier, e.g. lz01 for use in resource names"
   type        = string
   default = "lz01"
@@ -70,25 +75,28 @@ variable "resource_name_sequence_start" {
 }
 
 variable "resource_name_templates" {
+  description = "Enterprise naming templates for resource groups and resources"
   type        = map(string)
-  description = "Enterprise naming templates"
 
   default = {
-    # Resource groups
+    # Backup
     resource_group_backup               = "RG-$${location_id}-$${sub_id}-Backup"
-    resource_group_monitor              = "RG-$${location_id}-$${sub_id}-Monitor"
-    resource_group_network              = "RG-$${location_id}-$${sub_id}-Networking"
-    resource_group_security             = "RG-$${location_id}-$${sub_id}-Security"
+    recovery_services_vault_name        = "$${org_id}-$${location_id}-RSV-$${sub_id}"
 
-    # Resources
+    # Monitoring
+    resource_group_monitor              = "RG-$${location_id}-$${sub_id}-Monitor"
+    storage_account_name                = "sto$${lower(org_id)}$${lower(location_id)}$${lower(sub_id)}$${uniqueness}"
+    log_analytics_workspace_name        = "$${org_id}-$${location_id}-LAW-$${sub_id}"
+
+    # Networking
+    resource_group_network              = "RG-$${location_id}-$${sub_id}-Networking"
     virtual_network_name                = "$${org_id}-$${location_id}-VNET-$${sub_id}"
     network_security_group_name         = "$${org_id}-$${location_id}-NSG-$${sub_id}"
     route_table_name                    = "$${org_id}-$${location_id}-RT-$${sub_id}"
-    log_analytics_workspace_name        = "$${org_id}-$${location_id}-LAW-$${sub_id}"
+
+    # Security
+    resource_group_security             = "RG-$${location_id}-$${sub_id}-Security"
     key_vault_name                      = "$${org_id}-$${location_id}-KV-$${sub_id}"
-    recovery_services_vault_name        = "$${org_id}-$${location_id}-RSV-$${sub_id}"
-    storage_account_name                = "sto$${lower(org_id)}$${lower(location_id)}$${lower(sub_id)}$${uniqueness}"
-    user_assigned_managed_identity_name = "$${org_id}-$${location_id}-UAMI-$${sub_id}"
   }
 }
 

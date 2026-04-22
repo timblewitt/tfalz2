@@ -5,7 +5,7 @@ locals {
     location       = var.location
     location_id    = var.location_id == "" ? module.regions.regions_by_name[var.location].geo_code : var.location_id
     environment_id = var.environment_id
-    sub_id         = var.sub_id
+    sub_id         = var.lz_id
     uniqueness     = random_string.unique_name.id
     sequence       = format("%02d", var.resource_name_sequence_start)
   }

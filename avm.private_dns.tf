@@ -1,6 +1,6 @@
 module "private_dns_zone_key_vault" {
   source  = "Azure/avm-res-network-privatednszone/azurerm"
-  version = "0.4.2"
+  version = "~> 0.5"
 
   parent_id   = module.rg_network.resource_id
   domain_name = "privatelink.vaultcore.azure.net"
