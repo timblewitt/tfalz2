@@ -5,6 +5,10 @@ module "virtual_network" {
   parent_id           = module.rg_network.resource_id
   subnets             = local.subnets
   address_space       = [var.address_space]
+  
+  dns_servers = length(var.vnet_dns_servers) > 0 ? {
+    dns_servers = var.vnet_dns_servers
+  } : null
   location            = var.location
   name                = local.resource_names.virtual_network_name
   diagnostic_settings = local.diagnostic_settings

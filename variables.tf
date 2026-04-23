@@ -123,6 +123,12 @@ variable "route_table_routes" {
   }))
 }
 
+variable "vnet_dns_servers" {
+  description = "Optional list of custom DNS servers for the virtual network"
+  type        = list(string)
+  default     = []
+}
+
 variable "tags" {
   type        = map(string)
   description = "A map of tags to add to all resources"
