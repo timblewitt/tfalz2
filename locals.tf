@@ -43,3 +43,7 @@ locals {
   my_ip_address_split = split(".", data.http.ip.response_body)
   my_cidr_slash_24    = "${join(".", slice(local.my_ip_address_split, 0, 3))}.0/24"
 }
+
+locals {
+  current_month_start = formatdate("YYYY-MM-01'T'00:00:00Z", timestamp())
+}

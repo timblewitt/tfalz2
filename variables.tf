@@ -129,6 +129,16 @@ variable "vnet_dns_servers" {
   default     = []
 }
 
+variable "monthly_budget_amount" {
+  description = "Monthly subscription budget amount"
+  type        = number
+}
+
+variable "budget_contact_emails" {
+  description = "Email addresses to notify for budget alerts"
+  type        = list(string)
+}
+
 variable "tags" {
   type        = map(string)
   description = "A map of tags to add to all resources"

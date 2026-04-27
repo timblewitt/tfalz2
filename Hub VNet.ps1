@@ -1,6 +1,6 @@
 
 $subscriptionId = "6ff4f65a-59eb-44d4-8f3a-199f24f2fec2"
-$location       = "ukwest"
+$location       = "uksouth"
 $rgName         = "RG-UKS-Hub-Networking"
 $vnetName       = "ABC-UKS-VNet-Hub"
 
