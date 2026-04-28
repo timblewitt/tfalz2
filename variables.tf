@@ -147,6 +147,18 @@ variable "hub_vnet_resource_group_name" {
   default     = null
 }
 
+variable "hub_private_dns_zones" {
+  description = "Private DNS zones hosted in the hub to link to spoke VNets"
+  type        = map(string)
+
+  default = {
+    blob  = "privatelink.blob.core.windows.net"
+    file  = "privatelink.file.core.windows.net"
+    vault = "privatelink.vaultcore.azure.net"
+    sql   = "privatelink.database.windows.net"
+  }
+}
+
 variable "hub_private_dns_zone_name" {
   description = "Hub Private DNS zone name (e.g. privatelink.blob.core.windows.net)"
   type        = string

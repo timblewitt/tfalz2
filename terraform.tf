@@ -24,7 +24,7 @@ terraform {
   }
 }
 
-# Spoke subscription provider (your current one)
+# Spoke subscription provider 
 provider "azurerm" {
   subscription_id = var.subscription_id
 
@@ -38,7 +38,7 @@ provider "azurerm" {
   storage_use_azuread             = true
 }
 
-# Hub subscription provider (NEW)
+# Hub subscription provider 
 provider "azurerm" {
   alias           = "hub"
   subscription_id = var.hub_subscription_id

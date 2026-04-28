@@ -1,10 +1,9 @@
 module "peering_spoke_to_hub" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm//modules/peering"
-  version = "0.17.1"
+  version = "~> 0.17"
 
   count = var.enable_hub_integration ? 1 : 0
 
-  # REQUIRED by the submodule
   parent_id = module.virtual_network.resource_id
   remote_virtual_network_id = data.azurerm_virtual_network.hub.id
 
@@ -14,12 +13,12 @@ module "peering_spoke_to_hub" {
   allow_virtual_network_access = true
   use_remote_gateways          = var.use_hub_gateway
 
-  # We explicitly do NOT create reverse peering here
   create_reverse_peering = false
 }
+
 module "peering_hub_to_spoke" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm//modules/peering"
-  version = "0.17.1"
+  version = "~> 0.17"
 
   providers = {
     azurerm = azurerm.hub

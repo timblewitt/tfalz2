@@ -10,7 +10,6 @@ module "storage_account" {
 
   managed_identities = {
     system_assigned            = true
-  //  user_assigned_resource_ids = [module.user_assigned_managed_identity.resource_id]
   }
 
   containers = {
@@ -22,7 +21,7 @@ module "storage_account" {
 
   private_endpoints = {
     primary = {
-        private_dns_zone_group = null
+        private_dns_zone_resource_ids = [data.azurerm_private_dns_zone.hub_blob.id]
 //      private_dns_zone_resource_ids = [module.private_dns_zone_storage_account.resource_id]
       subnet_resource_id            = module.virtual_network.subnets["default"].resource_id
 //      subnet_resource_id            = module.virtual_network.subnets["snet-pe"].resource_id

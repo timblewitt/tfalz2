@@ -39,29 +39,43 @@ $vnet = New-AzVirtualNetwork `
     -Subnet $subnets
 
     
-$privateDnsZoneName = "privatelink.blob.core.windows.net"
-$vnetLinkName       = "$($vnetName)-blobdnslink"   
+# Private DNS zones to create and link
+$privateDnsZones = @(
+    "privatelink.vaultcore.azure.net"
+    "privatelink.file.core.windows.net"
+    "privatelink.database.windows.net"
+)
 
-#Import-Module Az.PrivateDns -ErrorAction Stop
+foreach ($zoneName in $privateDnsZones) {
 
-$dnsZone = Get-AzPrivateDnsZone -ResourceGroupName $rgName -Name $privateDnsZoneName -ErrorAction SilentlyContinue
-if (-not $dnsZone) {
-    $dnsZone = New-AzPrivateDnsZone -ResourceGroupName $rgName -Name $privateDnsZoneName
-}
+    $vnetLinkName = "$($vnetName)-$($zoneName.Replace('.', '-'))-link"
 
-$vnetLink = Get-AzPrivateDnsVirtualNetworkLink `
-    -ResourceGroupName $rgName `
-    -ZoneName $privateDnsZoneName `
-    -Name $vnetLinkName `
-    -ErrorAction SilentlyContinue
-
-if (-not $vnetLink) {
-    New-AzPrivateDnsVirtualNetworkLink `
+    # Create Private DNS zone if it doesn't exist
+    $dnsZone = Get-AzPrivateDnsZone `
         -ResourceGroupName $rgName `
-        -ZoneName $privateDnsZoneName `
-        -Name $vnetLinkName `
-        -VirtualNetworkId $vnet.Id `
-        -EnableRegistration:$false `
-        -ResolutionPolicy NxDomainRedirect | Out-Null
-}
+        -Name $zoneName `
+        -ErrorAction SilentlyContinue
 
+    if (-not $dnsZone) {
+        $dnsZone = New-AzPrivateDnsZone `
+            -ResourceGroupName $rgName `
+            -Name $zoneName
+    }
+
+    # Create VNet link if it doesn't exist
+    $vnetLink = Get-AzPrivateDnsVirtualNetworkLink `
+        -ResourceGroupName $rgName `
+        -ZoneName $zoneName `
+        -Name $vnetLinkName `
+        -ErrorAction SilentlyContinue
+
+    if (-not $vnetLink) {
+        New-AzPrivateDnsVirtualNetworkLink `
+            -ResourceGroupName $rgName `
+            -ZoneName $zoneName `
+            -Name $vnetLinkName `
+            -VirtualNetworkId $vnet.Id `
+            -EnableRegistration:$false `
+            -ResolutionPolicy NxDomainRedirect | Out-Null
+    }
+}

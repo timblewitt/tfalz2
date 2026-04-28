@@ -2,6 +2,8 @@ module "virtual_network" {
   source  = "Azure/avm-res-network-virtualnetwork/azurerm"
   version = "~> 0.14"
 
+  name                = local.resource_names.virtual_network_name
+  location            = var.location
   parent_id           = module.rg_network.resource_id
   subnets             = local.subnets
   address_space       = [var.address_space]
@@ -9,8 +11,6 @@ module "virtual_network" {
   dns_servers = length(var.vnet_dns_servers) > 0 ? {
     dns_servers = var.vnet_dns_servers
   } : null
-  location            = var.location
-  name                = local.resource_names.virtual_network_name
   diagnostic_settings = local.diagnostic_settings
   tags                = var.tags
 }

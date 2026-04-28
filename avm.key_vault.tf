@@ -12,7 +12,7 @@ module "key_vault" {
 
   private_endpoints = {
     primary = {
-        private_dns_zone_group = null
+      private_dns_zone_resource_ids = [data.azurerm_private_dns_zone.hub_kv.id]
 //      private_dns_zone_resource_ids = [module.private_dns_zone_key_vault.resource_id]
       subnet_resource_id            = module.virtual_network.subnets["default"].resource_id
 //      subnet_resource_id            = module.virtual_network.subnets["snet-pe"].resource_id
