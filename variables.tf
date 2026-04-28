@@ -129,6 +129,48 @@ variable "vnet_dns_servers" {
   default     = []
 }
 
+variable "enable_hub_integration" {
+  description = "Toggle hub peering + hub private DNS zone link (true/false)"
+  type        = bool
+  default     = false
+}
+
+variable "hub_vnet_name" {
+  description = "Name of the hub VNet (e.g. ABC-UKS-VNet-Hub)"
+  type        = string
+  default     = null
+}
+
+variable "hub_vnet_resource_group_name" {
+  description = "Resource group name of the hub VNet"
+  type        = string
+  default     = null
+}
+
+variable "hub_private_dns_zone_name" {
+  description = "Hub Private DNS zone name (e.g. privatelink.blob.core.windows.net)"
+  type        = string
+  default     = null
+}
+
+variable "hub_private_dns_zone_resource_group_name" {
+  description = "Resource group name where the hub Private DNS zone is hosted"
+  type        = string
+  default     = null
+}
+
+variable "use_hub_gateway" {
+  description = "If true, spoke uses remote (hub) gateway (use_remote_gateways / allow_gateway_transit)"
+  type        = bool
+  default     = false
+}
+
+variable "hub_subscription_id" {
+  description = "Subscription ID (GUID) of the hub/connectivity subscription"
+  type        = string
+  default     = null
+}
+
 variable "monthly_budget_amount" {
   description = "Monthly subscription budget amount"
   type        = number

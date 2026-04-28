@@ -22,9 +22,10 @@ module "storage_account" {
 
   private_endpoints = {
     primary = {
-      private_dns_zone_resource_ids = [module.private_dns_zone_storage_account.resource_id]
+        private_dns_zone_group = null
+//      private_dns_zone_resource_ids = [module.private_dns_zone_storage_account.resource_id]
       subnet_resource_id            = module.virtual_network.subnets["default"].resource_id
-//      subnet_resource_id            = module.virtual_network.subnets["private_endpoints"].resource_id
+//      subnet_resource_id            = module.virtual_network.subnets["snet-pe"].resource_id
       subresource_name              = "blob"
       tags                          = var.tags
     }
